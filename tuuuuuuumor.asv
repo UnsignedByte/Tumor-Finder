@@ -12,7 +12,9 @@ stimuliNum = 147;
 ord = randperm(150,trials);
 responses = zeros(1,trials);
 error = zeros(1,trials);
-prev = zeros(3,3,3); %cur x response x prev
+prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response when current tumor
+
+%1 = 0, 2 = 147/3, 3 = 2*147/3
 
 tid = zeros(1,stimuliNum);
 
@@ -55,6 +57,14 @@ for i = 1:trials
 end
 
 Screen('CloseAll');
+if ~isfolder('Tumor Results') mkdir('Tumor Results'); end %saving
+cd 'Tumor Results';
+if ~isfolder(init) mkdir(init); end %saving
+cd(init);
+save('prev.mat', 'prev'); %3x3x3 matrix 
+save('order.mat', 'order');
+save('responses.mat', 'responses');
+cd ../..;
 
         
     
