@@ -14,6 +14,7 @@ order = randi(stimuliNum,1, trials);
 responses = zeros(2,trials);
 
 prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response when current tumor
+prevRelative = zeros(3,3,3);
 
 %1 = 0, 2 = 147/3, 3 = 2*147/3
 
@@ -39,6 +40,7 @@ end
 RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
 
 p = 0;
+pR = 0;
 xC = (1:3)/4;
 yC = (wh/2)+zeros(1,3);
 rects = [xC.*ww-sizz;yC-sizz;xC.*ww+sizz;yC+sizz];
@@ -48,7 +50,7 @@ Screen('DrawTextures',window,abc,[],rects);
 Screen('Flip', window);
 KbStrokeWait();
 
-for i = 1:trials
+for i = 1:trials+1
     cur = order(i);
     Screen('DrawTexture', window, tid(1,cur), [], [ww/2-siz(1); wh/2-siz(1); ww/2+siz(1); wh/2+siz(1)]);
     Screen('Flip', window, 0.1);
@@ -61,8 +63,10 @@ for i = 1:trials
     responses(2,i) = cAns;
     if p ~= 0
         prev(cAns,uAns,p) = prev(cAns,uAns,p)+1;
+        prevRelative(cAns,uAns,pR) = prevRelative(cAns,uAns,pR)+1;
     end
     p = cAns;
+    pR = uAns;
     Screen('DrawTexture',window,Screen('MakeTexture',window,resizem(round(rand(siz(1)/4))*255,siz.*2)));
     Screen('Flip',window);
     WaitSecs(0.3);
@@ -74,6 +78,7 @@ cd 'Tumor Results';
 if ~isfolder(init) mkdir(init); end %saving
 cd(init);
 save('prev.mat', 'prev'); %3x3x3 matrix 
+save('prevRelative.mat', 'prevRelative');
 save('order.mat', 'order');
 
 save('responses.mat', 'responses');

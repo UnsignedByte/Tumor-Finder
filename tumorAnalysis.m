@@ -92,3 +92,22 @@ for user=1:userNum
     %disp(totalAccuracy);
     
 end
+
+%% find P value
+numSkewed = 0;
+for i = 1:3
+    for j = 1:3
+        if i == j
+            continue;
+        end
+        numSkewed = numSkewed + prev(j,i,i);
+    end
+end
+p0 = ; %(proportion that they choose wrong)/2
+phat = numSkewed/(trials-1);
+sd = (p0*(1-p0)/trials)^0.5;
+z = (phat-p0)/sd;
+cdf = normcdf([z,99]);
+Pval = cdf(2)-cdf(1);
+
+        
