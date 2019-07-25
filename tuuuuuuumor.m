@@ -63,6 +63,9 @@ for i = 1:trials
         prev(cAns,uAns,p) = prev(cAns,uAns,p)+1;
     end
     p = cAns;
+    Screen('DrawTexture',window,Screen('MakeTexture',window,resizem(round(rand(siz(1)/4))*255,siz.*2)));
+    Screen('Flip',window);
+    WaitSecs(0.3);
 end
 
 Screen('CloseAll');
