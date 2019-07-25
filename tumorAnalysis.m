@@ -3,7 +3,7 @@ filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
 userNum = length(userData);
 
-plotNewGraph = cell(4);
+plotNewGraph = cell(4,2);
 
 allDeviations = zeros(3,1);
 allCorrelations = zeros(3,1);
@@ -31,11 +31,14 @@ for user=1:userNum
         
         % Set up the two Metrics of Comparison
         shapePrev = reshape(prevShapeData(shapeClass,:,:), 3, 3);
+        
+        plotNewGraph{shapeClass,1} = figure;
+        bar3(shapePrev);
+        
         allShapes = sum(reshape(shapePrev, 3^2, 1));
         
         ordIndices = find(responses(2,1:end-1) == shapeClass);
-        
-        meanDeviation = shapeClass-mean((order(ordIndices+1)/147));
+        meanDeviation = mean(((3*order(ordIndices)/147) - responses(1, ordIndices+1)));
         
         if allShapes > 0
             booldeanDiag = diag(repelem(1,3));
@@ -82,10 +85,14 @@ for user=1:userNum
         end
     end
     
-    plotNewGraph{shapeClass} = figure;
+    plotNewGraph{4, 1} = figure;
     
     hold on
-    scatter(allDeviations(find(allDeviations ~= 0)), allCorrelations(find(allDeviations ~= 0)));
+    shapeData = horzcat(allDeviations(find(allDeviations ~= 0)), allCorrelations(find(allDeviations ~= 0)));
+    shapeData = reshape(shapeData, 2, 2);
+    
+    title('For each Previous Shape A, B and C, the relation between the last image seen and the current user choice');
+    bar([1:size(shapeData,2)], shapeData);
     hold off
     
     % Show Accuracy
