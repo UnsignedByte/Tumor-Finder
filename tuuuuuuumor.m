@@ -62,6 +62,6 @@ cd 'Tumor Results';
 if ~isfolder(init) mkdir(init); end %saving
 cd(init);
 save('prev.mat', 'prev'); %3x3x3 matrix 
-save('order.mat', 'order');
+save('order.mat', 'ord');
 save('responses.mat', 'responses');
 cd ../..;
