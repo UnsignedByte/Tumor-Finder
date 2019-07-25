@@ -62,6 +62,7 @@ for i = 1:trials
         prev(cAns,uAns,p) = prev(cAns,uAns,p)+1;
     end
     p = cAns;
+    Screen('Flip',window);
     WaitSecs(1);
 end
 
