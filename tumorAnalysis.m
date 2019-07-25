@@ -3,6 +3,11 @@ filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
 userNum = length(userData);
 
+plotNewGraph = cell(4);
+
+allDeviations = zeros(3,1);
+allCorrelations = zeros(3,1);
+
 %% Find Accuracy of Each User
 
 for user=1:userNum
@@ -12,30 +17,78 @@ for user=1:userNum
     
     % Convert eah Shape Structure into a 3x3 Array
     userName = userData(user).name;
-    prevData = load(fullfile([filePath, userName, '/prev.mat']), 'prev');
-    prevData = cell2mat(struct2cell(prevData));
+    
+    prevShapeData = load(fullfile(filePath, userName, 'prev.mat'), 'prev');
+    prevShapeData = cell2mat(struct2cell(prevShapeData));
+    
+    shapeOrder = load(fullfile(filePath, userName, 'order.mat'), 'order');
+    shapeOrder = cell2mat(struct2cell(shapeOrder));
+    
+    shapeResponses = load(fullfile(filePath, userName, 'responses.mat'), 'responses');
+    shapeResponses = cell2mat(struct2cell(shapeResponses));
     
     for shapeClass=1:3
+        
         % Set up the two Metrics of Comparison
-        shapePrev = prevData(shapeClass,:,:);
-        booldeanDiag = diag(repelem(1,3));
+        shapePrev = reshape(prevShapeData(shapeClass,:,:), 3, 3);
+        allShapes = sum(reshape(shapePrev, 3^2, 1));
         
-        % Find where User Response deviates from set Shape Class
-        testXor = length(setxor(booldeanDiag, (shapePrev ./ shapePrev)));
-        allShapes = sum(shapePrev);
+        ordIndices = find(responses(2,1:end-1) == shapeClass);
         
-        % Record Accuracy as Percentage Right for each Shape
-        pctAccuracy = 1-(testXor/allShapes);
-        totalAccuracy(shapeClass) = pctAccuracy;
+        meanDeviation = shapeClass-mean((order(ordIndices+1)/147));
+        
+        if allShapes > 0
+            booldeanDiag = diag(repelem(1,3));
+
+            % Find where User Response deviates from set Shape Class
+            testXor = length(setxor(booldeanDiag, (shapePrev ./ shapePrev)));
+
+            % Record Accuracy as Percentage Right for each Shape
+            pctAccuracy = 1-(testXor/allShapes);
+            totalAccuracy(shapeClass) = pctAccuracy;
+
+            plotNewGraph{shapeClass} = figure;
+
+            lenRowOne = length(shapePrev(1,:)); 
+            lenRowTwo = length(shapePrev(2,:)); 
+            lenRowThree = length(shapePrev(3,:)); 
+
+            userX = zeros(1,1);
+            userY = zeros(1,1);
+
+            shapePrev = reshape(shapePrev, 3^2, 1);
+            trueIndices = find(shapePrev > 0);
+
+            userX(1:length(trueIndices)) = mod(trueIndices, 3)+1;
+            plotX = userX;
+            userY(1:length(trueIndices)) = 3-(floor(trueIndices/3)+1);
             
-            % Next -- Correlate all non-one totalAccuracy vals with
-            % difference between shapeClass array val and its previous
-            % values. Find the trend of the line and r. Use interpolation
-            % to show relationship between difference between trials and
-            % user response.
+            [p,S] = polyfit(userX,userY,1); 
+            predictFit = polyval(p, userX);
+            
+            hold on
+            plot(plotX, predictFit);
+            scatter(userX, userY);
+            
+            r = corrcoef(userX, userY);
+            disp(['The correlation for Shape ' num2str(shapeClass) ...
+                ' is: ' num2str(r(1,2))]);
+            disp(['Mean Deviation is ' num2str(meanDeviation)]);
+            
+            allDeviations(shapeClass) = r(1,2);
+            allCorrelations(shapeClass) = meanDeviation;
+            
+            hold off
+        end
     end
     
+    plotNewGraph{shapeClass} = figure;
+    
+    hold on
+    scatter(allDeviations(find(allDeviations ~= 0)), allCorrelations(find(allDeviations ~= 0)));
+    hold off
+    
     % Show Accuracy
-    disp(totalAccuracy);
+    %disp(totalAccuracy);
     
 end
