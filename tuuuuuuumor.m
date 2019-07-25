@@ -51,7 +51,7 @@ KbStrokeWait();
 for i = 1:trials
     cur = order(i);
     Screen('DrawTexture', window, tid(1,cur), [], [ww/2-siz(1); wh/2-siz(1); ww/2+siz(1); wh/2+siz(1)]);
-    Screen('Flip', window);
+    Screen('Flip', window, 0.05);
     [~, keyCode] = KbStrokeWait();
     % Note: The file Responses now holds the values of both the user % comp
     % data
@@ -63,6 +63,7 @@ for i = 1:trials
         prev(cAns,uAns,p) = prev(cAns,uAns,p)+1;
     end
     p = cAns;
+    Screen('Flip', window);
 end
 
 Screen('CloseAll');
