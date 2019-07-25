@@ -18,12 +18,12 @@ prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response whe
 
 tid = zeros(1,stimuliNum);
 
-file = 'Stimuli\';
+file = 'Stimuli';
 siz = [256 256];
 stimuli = cell(1,stimuliNum);
 
 for i = 1:stimuliNum
-    stimuli{1,i} = imresize(imread([file 'Morph' num2str(i) '.jpg']),siz);
+    stimuli{1,i} = imresize(imread(fullfile(file, ['Morph' num2str(i) '.jpg'])),siz);
     tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
 
@@ -65,13 +65,3 @@ save('prev.mat', 'prev'); %3x3x3 matrix
 save('order.mat', 'order');
 save('responses.mat', 'responses');
 cd ../..;
-
-        
-    
-    
-
-    
-    
-    
-
-
