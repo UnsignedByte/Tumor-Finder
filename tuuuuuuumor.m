@@ -7,7 +7,7 @@ HideCursor();
 ww = rect(3); wh = rect(4);
 Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-trials = 5;
+trials = 500;
 stimuliNum = 147;
 
 order = randperm(stimuliNum,trials);
@@ -30,9 +30,18 @@ abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' n
 
 
 for i = 1:stimuliNum
+    DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
+    Screen('Flip', window);
     stimuli{1,i} = min(uint8(double(imresize(imread(fullfile(file, ['Morph' num2str(i) '.jpg'])),siz)) + generate_noise(siz(1))),255);
     tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
+
+RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
+
+DrawFormattedText(window, 'Remember these 3 tumors. You will respond with the number corresponding to the closest type of tumor for each trial (1, 2, 3 from left to right).', 'center', wh/4);
+Screen('DrawTextures',window,abc,[],rects);
+Screen('Flip', window);
+KbStrokeWait();
 
 p = 0;
 xC = (1:3)/4;
@@ -40,15 +49,8 @@ yC = (wh/2)+zeros(1,3);
 rects = [xC.*ww-sizz;yC-sizz;xC.*ww+sizz;yC+sizz];
 for i = 1:trials
     cur = order(i);
-    Screen('DrawTexture', window, tid(1,cur));
+    Screen('DrawTexture', window, tid(1,cur), [], [ww/2-siz(1); wh/2-siz(1); ww/2+siz(1); wh/2+siz(1)]);
     Screen('Flip', window);
-    WaitSecs(1);
-    Screen('Flip', window);
-    WaitSecs(0.5);
-    Screen('DrawTextures',window,abc,[],rects);
-    RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
-    
-    Screen('Flip', window); 
     [~, keyCode] = KbStrokeWait();
     % Note: The file Responses now holds the values of both the user % comp
     % data
