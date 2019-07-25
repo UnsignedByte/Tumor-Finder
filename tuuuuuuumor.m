@@ -9,7 +9,7 @@ Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 trials = 5;
 stimuliNum = 147;
-ord = randperm(150,trials);
+ord = randperm(stimuliNum,trials);
 responses = zeros(1,trials);
 error = zeros(1,trials);
 prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response when current tumor
@@ -42,7 +42,7 @@ for i = 1:trials
     while ~clicks(1,1)
         [x,~,clicks] = GetMouse();
         response = mod(floor(x)+offset, stimuliNum)+1;
-        Screen('DrawTexture', window , tid(response));    
+        Screen('DrawTexture', window, tid(response));    
         Screen('Flip', window);
     end  
     Screen('Flip', window); 
@@ -62,7 +62,7 @@ cd 'Tumor Results';
 if ~isfolder(init) mkdir(init); end %saving
 cd(init);
 save('prev.mat', 'prev'); %3x3x3 matrix 
-save('order.mat', 'order');
+save('ord.mat', 'ord');
 save('responses.mat', 'responses');
 cd ../..;
 
