@@ -18,13 +18,13 @@ for user=1:userNum
     % Convert eah Shape Structure into a 3x3 Array
     userName = userData(user).name;
     
-    prevShapeData = load(fullfile([filePath, userName, '/prev.mat']), 'prev');
+    prevShapeData = load(fullfile(filePath, userName, 'prev.mat'), 'prev');
     prevShapeData = cell2mat(struct2cell(prevShapeData));
     
-    shapeOrder = load(fullfile([filePath, userName, '/order.mat']), 'order');
+    shapeOrder = load(fullfile(filePath, userName, 'order.mat'), 'order');
     shapeOrder = cell2mat(struct2cell(shapeOrder));
     
-    shapeResponses = load(fullfile([filePath, userName, '/responses.mat']), 'responses');
+    shapeResponses = load(fullfile(filePath, userName, 'responses.mat'), 'responses');
     shapeResponses = cell2mat(struct2cell(shapeResponses));
     
     for shapeClass=1:3
