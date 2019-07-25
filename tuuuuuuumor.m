@@ -9,8 +9,9 @@ Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 trials = 5;
 stimuliNum = 147;
-ord = randperm(stimuliNum,trials);
-responses = zeros(1,trials);
+
+order = randperm(150,trials);
+responses = zeros(2,trials);
 error = zeros(1,trials);
 prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response when current tumor
 
@@ -18,18 +19,18 @@ prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response whe
 
 tid = zeros(1,stimuliNum);
 
-file = 'Stimuli\';
+file = 'Stimuli';
 siz = [256 256];
 stimuli = cell(1,stimuliNum);
 
 for i = 1:stimuliNum
-    stimuli{1,i} = imresize(imread([file 'Morph' num2str(i) '.jpg']),siz);
+    stimuli{1,i} = imresize(imread(fullfile(file, ['Morph' num2str(i) '.jpg'])),siz);
     tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
 
 p = 0;
 for i = 1:trials
-    cur = ord(i);
+    cur = order(i);
     Screen('DrawTexture', window, Screen('MakeTexture', window, min(uint8(double(stimuli{1,cur}) + generate_noise(siz(1))),255)));
     Screen('Flip', window);
     WaitSecs(1);
@@ -46,9 +47,12 @@ for i = 1:trials
         Screen('Flip', window);
     end  
     Screen('Flip', window); 
-    responses(1,i) = response;
+    % Note: The file Responses now holds the values of both the user % comp
+    % data
     uAns = mod(round(3*response/147),3)+1;
     cAns = mod(round(3*cur/147),3)+1;
+    responses(1,i) = uAns;
+    responses(2,i) = cAns;
     if p ~= 0
         prev(cAns,uAns,p) = prev(cAns,uAns,p)+1;
     end
@@ -63,15 +67,6 @@ if ~isfolder(init) mkdir(init); end %saving
 cd(init);
 save('prev.mat', 'prev'); %3x3x3 matrix 
 save('ord.mat', 'ord');
+
 save('responses.mat', 'responses');
 cd ../..;
-
-        
-    
-    
-
-    
-    
-    
-
-
