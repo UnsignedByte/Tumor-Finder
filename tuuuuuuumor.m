@@ -10,7 +10,7 @@ Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 trials = 5;
 stimuliNum = 147;
 
-order = randperm(150,trials);
+order = randperm(stimuliNum,trials);
 responses = zeros(2,trials);
 error = zeros(1,trials);
 prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response when current tumor
