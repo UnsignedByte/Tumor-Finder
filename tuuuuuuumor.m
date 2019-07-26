@@ -59,8 +59,10 @@ for i = 1:trials+1
     % data
     uAns = find(keyCode,1) - KbName('1!') + 1;
     cAns = mod(round(3*cur/stimuliNum),3)+1;
-    responses(1,i) = uAns;
-    responses(2,i) = cAns;
+    if i > 1
+        responses(1,i-1) = uAns;
+        responses(2,i-1) = cAns;
+    end
     if p ~= 0
         prev(cAns,uAns,p) = prev(cAns,uAns,p)+1;
         prevRelative(cAns,uAns,pR) = prevRelative(cAns,uAns,pR)+1;
