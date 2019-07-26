@@ -93,21 +93,22 @@ for user=1:userNum
     
 end
 
-%% find P value
+%% find P value 
+data = prevRelative;
 numSkewed = 0;
+numWrong = 0;
 for i = 1:3
-    for j = 1:3
-        if i == j
-            continue;
-        end
-        numSkewed = numSkewed + prev(j,i,i);
-    end
+    col = data(:,i,i);
+    inc = sum(col) - col(i);
+    numSkewed = numSkewed + inc;
+    a = mod(i,3)+1; b = mod(i+1,3)+1; 
+    numWrong = numWrong + inc + data(a,b,i) + data(b,a,i);
 end
-p0 = ; %(proportion that they choose wrong)/2
-phat = numSkewed/(trials-1);
-sd = (p0*(1-p0)/trials)^0.5;
+p0 = 0.5; 
+phat = numSkewed/numWrong;
+sd = (p0*(1-p0)/numWrong)^0.5;
 z = (phat-p0)/sd;
-cdf = normcdf([z,99]);
-Pval = cdf(2)-cdf(1);
+cdf = normcdf(z);
+Pval = 1-cdf;
 
         
