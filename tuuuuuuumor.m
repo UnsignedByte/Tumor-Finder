@@ -7,10 +7,10 @@ HideCursor();
 ww = rect(3); wh = rect(4);
 Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-trials = 500;
+trials = 300;
 stimuliNum = 147;
 
-order = randi(stimuliNum,1, trials);
+order = randi(stimuliNum,1, trials+1);
 responses = zeros(2,trials);
 
 prev = zeros(3,3,3); %cur x response x prev ,, counts # of times of response when current tumor

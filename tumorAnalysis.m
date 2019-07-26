@@ -102,20 +102,17 @@ end
 
 %% find P value 
 data = prevRelative;
-numSkewed = 0;
-numWrong = 0;
+p0s = zeros(1,3); 
+phats = zeros(1,3);
+ns = zeros(1,3);
 for i = 1:3
-    col = data(:,i,i);
-    inc = sum(col) - col(i);
-    numSkewed = numSkewed + inc;
-    a = mod(i,3)+1; b = mod(i+1,3)+1; 
-    numWrong = numWrong + inc + data(a,b,i) + data(b,a,i);
+    ns(i) = sum(data(:,:,i),'all');
+    p0s(i) = sum(data(:,i,:),'all')/trials;
+    phats(i) = sum(data(:,i,i))/ns(i);
 end
-p0 = 0.5; 
-phat = numSkewed/numWrong;
-sd = (p0*(1-p0)/numWrong)^0.5;
-z = (phat-p0)/sd;
-cdf = normcdf(z);
-Pval = 1-cdf;
+sds = (p0s.*(1-p0s)./ns).^0.5;
+zs = (phats-p0s)./sds;
+cdfs = normcdf(zs);
+Pvals = 1-cdfs;
 
         
