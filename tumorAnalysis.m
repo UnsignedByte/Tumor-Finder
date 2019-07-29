@@ -1,3 +1,4 @@
+%{
 %% Get User Files
 filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
@@ -99,7 +100,7 @@ for user=1:userNum
     %disp(totalAccuracy);
     
 end
-
+%}
 %% find P value 
 data = prevRelative;
 p0s = zeros(1,3); 
