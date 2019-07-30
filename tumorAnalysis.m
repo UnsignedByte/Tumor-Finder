@@ -1,4 +1,4 @@
-%{
+
 %% Get User Files
 filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
@@ -19,19 +19,33 @@ for user=1:userNum
     % Convert eah Shape Structure into a 3x3 Array
     userName = userData(user).name;
     
-    prevShapeData = load(fullfile(filePath, userName, 'prev.mat'), 'prev');
-    prevShapeData = cell2mat(struct2cell(prevShapeData));
+    load(fullfile(filePath, userName, 'prevRelative.mat'));
     
-    shapeOrder = load(fullfile(filePath, userName, 'order.mat'), 'order');
-    shapeOrder = cell2mat(struct2cell(shapeOrder));
+    order = load(fullfile(filePath, userName, 'order.mat'));
+    order = cell2mat(struct2cell(order));
     
-    shapeResponses = load(fullfile(filePath, userName, 'responses.mat'), 'responses');
-    shapeResponses = cell2mat(struct2cell(shapeResponses));
+    load(fullfile(filePath, userName, 'responses.mat'));
     
+    trials = size(responses, 2);
+    p0s = zeros(1,3); 
+    phats = zeros(1,3);
+    ns = zeros(1,3);
+    for i = 1:3
+        ns(i) = sum(prevRelative(:,:,i),'all');
+        p0s(i) = sum(prevRelative(:,i,:),'all')/trials;
+        phats(i) = sum(prevRelative(:,i,i))/ns(i);
+    end
+    sds = (p0s.*(1-p0s)./ns).^0.5;
+    zs = (phats-p0s)./sds;
+    cdfs = normcdf(zs);
+    Pvals = 1-cdfs;
+    save(fullfile(filePath, userName, 'pvals.mat'), 'Pvals');
+    
+    %{
     for shapeClass=1:3
         
         % Set up the two Metrics of Comparison
-        shapePrev = reshape(prevShapeData(shapeClass,:,:), 3, 3);
+        shapePrev = reshape(prevRelative(shapeClass,:,:), 3, 3);
         
         plotNewGraph{shapeClass,1} = figure;
         bar3(shapePrev);
@@ -85,35 +99,7 @@ for user=1:userNum
             hold off
         end
     end
-    
-    plotNewGraph{4, 1} = figure;
-    
-    hold on
-    shapeData = horzcat(allDeviations(find(allDeviations ~= 0)), allCorrelations(find(allDeviations ~= 0)));
-    shapeData = reshape(shapeData, 2, 2);
-    
-    title('For each Previous Shape A, B and C, the relation between the last image seen and the current user choice');
-    bar([1:size(shapeData,2)], shapeData);
-    hold off
-    
-    % Show Accuracy
-    %disp(totalAccuracy);
-    
+    %}
 end
-%}
-%% find P value 
-data = prevRelative;
-p0s = zeros(1,3); 
-phats = zeros(1,3);
-ns = zeros(1,3);
-for i = 1:3
-    ns(i) = sum(data(:,:,i),'all');
-    p0s(i) = sum(data(:,i,:),'all')/trials;
-    phats(i) = sum(data(:,i,i))/ns(i);
-end
-sds = (p0s.*(1-p0s)./ns).^0.5;
-zs = (phats-p0s)./sds;
-cdfs = normcdf(zs);
-Pvals = 1-cdfs;
 
         
