@@ -30,7 +30,7 @@ abc(1,2) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' n
 abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(2*stimuliNum/3) '.jpg'])),siz./2));
 
 div = 10;
-mag = 128;
+mag = 96;
 
 for i = 1:stimuliNum
     DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
