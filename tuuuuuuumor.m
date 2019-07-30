@@ -21,19 +21,21 @@ prevRelative = zeros(3,3,3);
 tid = zeros(1,stimuliNum);
 
 file = 'Stimuli';
-siz = [256 256];
+siz = [400 400];
 sizz = siz(1)/2;
 stimuli = cell(1,stimuliNum);
 abc = zeros(1,3);
-abc(1,1) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(stimuliNum) '.jpg'])),siz));
-abc(1,2) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(stimuliNum/3) '.jpg'])),siz));
-abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(2*stimuliNum/3) '.jpg'])),siz));
+abc(1,1) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(stimuliNum) '.jpg'])),siz./2));
+abc(1,2) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(stimuliNum/3) '.jpg'])),siz./2));
+abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(2*stimuliNum/3) '.jpg'])),siz./2));
 
+div = 10;
 
 for i = 1:stimuliNum
     DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
     Screen('Flip', window);
-    stimuli{1,i} = min(uint8(double(imresize(imread(fullfile(file, ['Morph' num2str(i) '.jpg'])),siz)) + generate_noise(siz(1))),255);
+    imag = imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div);
+    stimuli{1,i} = imresize(min(uint8(double(imag) + (rand(siz(1)/div)-0.5).*192),255),siz,'nearest');
     tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
 
@@ -43,7 +45,7 @@ p = 0;
 pR = 0;
 xC = (1:3)/4;
 yC = (wh/2)+zeros(1,3);
-rects = [xC.*ww-sizz;yC-sizz;xC.*ww+sizz;yC+sizz];
+rects = [xC.*ww-sizz/2;yC-sizz/2;xC.*ww+sizz/2;yC+sizz/2];
 
 DrawFormattedText(window, 'Remember these 3 tumors. You will respond with the number corresponding to the closest type of tumor for each trial (1, 2, 3 from left to right).', 'center', wh/4);
 Screen('DrawTextures',window,abc,[],rects);
@@ -52,7 +54,7 @@ KbStrokeWait();
 
 for i = 1:trials+1
     cur = order(i);
-    Screen('DrawTexture', window, tid(1,cur), [], [ww/2-siz(1); wh/2-siz(1); ww/2+siz(1); wh/2+siz(1)]);
+    Screen('DrawTexture', window, tid(1,cur), [], [ww/2-sizz; wh/2-sizz; ww/2+sizz; wh/2+sizz]);
     Screen('Flip', window, 0.1);
     [~, keyCode] = KbStrokeWait();
     % Note: The file Responses now holds the values of both the user % comp
@@ -69,7 +71,7 @@ for i = 1:trials+1
     end
     p = cAns;
     pR = uAns;
-    Screen('DrawTexture',window,Screen('MakeTexture',window,resizem(round(rand(siz(1)/4))*255,siz.*2)));
+    Screen('DrawTexture',window,Screen('MakeTexture',window,resizem(round(rand(siz(1)/div))*255,siz)));
     Screen('Flip',window);
     WaitSecs(0.3);
 end
