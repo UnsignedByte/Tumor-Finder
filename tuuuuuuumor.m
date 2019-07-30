@@ -30,12 +30,13 @@ abc(1,2) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' n
 abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(2*stimuliNum/3) '.jpg'])),siz./2));
 
 div = 10;
+mag = 192;
 
 for i = 1:stimuliNum
     DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
     Screen('Flip', window);
     imag = imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div);
-    stimuli{1,i} = imresize(min(uint8(double(imag) + (rand(siz(1)/div)-0.5).*192),255),siz,'nearest');
+    stimuli{1,i} = imresize(min(uint8(double(imag) + (rand(siz(1)/div)-0.5).*mag),255),siz,'nearest');
     tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
 
