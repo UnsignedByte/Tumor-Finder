@@ -32,7 +32,7 @@ abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' n
 
 ar = ww/wh;
 div = 4;
-mag = 96;
+mag = 128;
 
 noiseh = round(wh/div);
 noisew = round(ar * noiseh);
