@@ -36,14 +36,17 @@ mag = 96;
 noiseh = round(wh/div);
 noisew = round(ar * noiseh);
 
+noiseNum = 10;
 noises = zeros(stimuliNum,1);
+for i = 1:noiseNum
+    noises(i) = Screen('MakeTexture', window, resizem(round(rand(noiseh, noisew))*255,[wh,ww]));
+end
 
 for i = 1:stimuliNum
     rotnum = randi(3);
     DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
     Screen('Flip', window);
     noise = 128+(2.*rand(noiseh, noisew)-1).*mag;
-    noises(i) = Screen('MakeTexture', window, resizem(round(rand(noiseh, noisew))*255,[wh,ww]));
     imag = double(imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div)) - 128;
     imag = imrotate(imag, randi(360),'nearest','loose');
     locx = randi(noisew - size(imag,2)+1); locy = randi(noiseh - size(imag,2)+1);
@@ -84,7 +87,7 @@ for i = 1:trials+1
     end
     p = cAns;
     pR = uAns;
-    Screen('DrawTexture',window, noises(i));
+    Screen('DrawTexture',window, noises(randi(noiseNum)));
     Screen('Flip',window);
     WaitSecs(0.3);
 end
