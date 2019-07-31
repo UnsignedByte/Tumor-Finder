@@ -7,6 +7,7 @@ HideCursor();
 ww = rect(3); wh = rect(4);
 Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
 trials = 250;
 stimuliNum = 147;
 
