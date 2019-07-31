@@ -29,14 +29,24 @@ abc(1,1) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' n
 abc(1,2) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(stimuliNum/3) '.jpg'])),siz./2));
 abc(1,3) = Screen('MakeTexture',window,imresize(imread(fullfile(file, ['Morph' num2str(2*stimuliNum/3) '.jpg'])),siz./2));
 
-div = 8;
+ar = ww/wh;
+div = 4;
 mag = 96;
 
+noiseh = round(wh/div);
+noisew = round(ar * noiseh);
+
+
 for i = 1:stimuliNum
+    rotnum = randi(3);
     DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
     Screen('Flip', window);
-    imag = imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div);
-    stimuli{1,i} = imresize(min(uint8(double(imag) + (2.*rand(siz(1)/div)-1).*mag),255),siz,'nearest');
+    noise = 128+(2.*rand(noiseh, noisew)-1).*mag;
+    imag = double(imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div)) - 128;
+    imag = imrotate(imag, randi(360),'nearest','loose');
+    locx = randi(noisew - size(imag,2)+1); locy = randi(noiseh - size(imag,2)+1);
+    noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) = noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) + imag;
+    stimuli{1,i} = imresize(min(uint8(noise),255), [wh ww],'nearest');
     tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
 
@@ -55,7 +65,7 @@ KbStrokeWait();
 
 for i = 1:trials+1
     cur = order(i);
-    Screen('DrawTexture', window, tid(1,cur), [], [ww/2-sizz; wh/2-sizz; ww/2+sizz; wh/2+sizz]);
+    Screen('DrawTexture', window, tid(1,cur));
     Screen('Flip', window, 0.1);
     [~, keyCode] = KbStrokeWait();
     % Note: The file Responses now holds the values of both the user % comp
@@ -72,7 +82,7 @@ for i = 1:trials+1
     end
     p = cAns;
     pR = uAns;
-    Screen('DrawTexture',window,Screen('MakeTexture',window,resizem(round(rand(siz(1)/div))*255,siz)));
+    Screen('DrawTexture',window,Screen('MakeTexture',window,resizem(round(rand(noiseh, noisew))*255,[wh,ww])));
     Screen('Flip',window);
     WaitSecs(0.3);
 end
