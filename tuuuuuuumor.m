@@ -95,7 +95,7 @@ for i = 1:trials+1
     cursecs = now*24*60*60;
     corrmags(1,ceil(i/chunksize)) = mag;
     if mod(i,chunksize)==0
-        mag = mag*(1+(corrchunks(1,ceil(i/chunksize))/10-0.8));
+        mag = mag*(1+((corrchunks(1,ceil(i/chunksize))/10-0.8)/2));
     end
 end
 
