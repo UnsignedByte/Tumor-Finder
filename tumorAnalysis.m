@@ -6,13 +6,11 @@ filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
 userNum = length(userData);
 
-plotNewGraph = cell(4,2);
-
-%% GET Z-SCORE
+% Go through each User
 
 for user=1:userNum
     
-    % Convert eah Shape Structure into a 3x3 Array
+    % Convert each Shape Structure into a 3x3 Array
     userName = userData(user).name;
     
     load(fullfile(filePath, userName, 'prevRelative.mat'));
@@ -64,10 +62,9 @@ for user=1:userNum
     end
     xticklabels(visualBins);
 	%disp(histVals-stdVals);
-        
-	er = errorbar(bins,histVals,-stdVals,stdVals);    
-	er.Color = [0 0 0];                            
-	er.LineStyle = 'none';  
+    er = errorbar(bins,histVals,-stdVals,stdVals);    
+    er.Color = [0 0 0];                            
+    er.LineStyle = 'none';  
     
     %% GET Z-Scores
     
