@@ -13,10 +13,10 @@ for user=1:userNum
     userName = userData(user).name;
     load(fullfile(filePath, userName, 'prevRelative.mat'));
     
-    shapeResponses = load(fullfile(filePath, userName, '/responses.mat'), 'responses');
+    shapeResponses = load(fullfile(filePath, userName, 'responses.mat'), 'responses');
     shapeResponses = cell2mat(struct2cell(shapeResponses));
     
-    shapeIndices = load(fullfile(filePath, userName, '/order.mat'), 'order');
+    shapeIndices = load(fullfile(filePath, userName, 'order.mat'), 'order');
     shapeIndices = cell2mat(struct2cell(shapeIndices));
     
     trials = size(shapeResponses, 2);
@@ -80,10 +80,10 @@ for user=1:userNum
     % Plot difficulty over accuracy
     figureCell{user, 2} = figure;
     
-    corrchunks = load(fullfile(filePath, userName, '/corrchunks.mat'));
+    corrchunks = load(fullfile(filePath, userName, 'corrchunks.mat'));
     corrchunks = cell2mat(struct2cell(corrchunks));
     
-    corrmags = load(fullfile(filePath, userName, '/corrmags.mat'));
+    corrmags = load(fullfile(filePath, userName, 'corrmags.mat'));
     corrmags = cell2mat(struct2cell(corrmags));
     
     hold on
