@@ -33,10 +33,13 @@ for user=1:userNum
     % Graph the Data
     histList = vertcat(shapeDiffList, correctList);
     histList = sortrows(histList', 1)';
+    
     bins = [1:binNum];
     binLabels = zeros(binNum,2);
+    
     histVals = zeros(binNum, 1);
     errVals = zeros(binNum, 1);
+    
     for bin=1:binNum-1
         %Get mean accuracy
         histVals(bin) = mean(histList(2, 10*(bin-1)+1:10*bin));
@@ -57,16 +60,18 @@ for user=1:userNum
 	xlabel('Differences between previous and current shape appearance, from least to greatest')
 	ylabel('Mean accuracy from 0 to 1')
     
-    set(gcf,'position',[50,50,6*trials,500])
+    screenLimit = 2880; 
+    set(gcf,'position',[50,50,min(6*trials, screenLimit),500])
     
     somenames = num2str(bins.*10);
     xticks([1:1:binNum])
     visualBins = cell(binNum,1);
+    
     for bin=1:binNum
         visualBins{bin} = [num2str(binLabels(bin,1)), '-', num2str(binLabels(bin,2))];
     end
     xticklabels(visualBins);
-	%disp(histVals-stdVals);
+
     er = errorbar(bins,histVals,-errVals,errVals);    
     er.Color = [0 0 0];                            
     er.LineStyle = 'none';  
