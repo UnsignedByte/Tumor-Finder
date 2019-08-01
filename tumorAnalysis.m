@@ -93,10 +93,10 @@ for user=1:userNum
     
     title('Over all the trials, the user accuracy versus the difficulty setting')
     
-    yyaxis left
-    plot([1:length(corrmags)], corrmags);
+    %yyaxis left
+    %plot([1:length(corrmags)], corrmags);
     
-    yyaxis right
+    %yyaxis right
     plot([1:length(corrchunks)], corrchunks);
     
     %% GET Z-Scores
