@@ -79,6 +79,10 @@ for i = 1:trials+1
     % data
     uAns = find(keyCode,1) - KbName('1!') + 1;
     cAns = mod(round(3*cur/stimuliNum),3)+1;
+    if uAns == cAns
+        corr = corr + 1;
+    end
+    
     if i > 1
         responses(1,i-1) = uAns;
         responses(2,i-1) = cAns;
