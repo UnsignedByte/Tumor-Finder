@@ -50,6 +50,7 @@ for i = 1:stimuliNum
     noise = 128+(2.*rand(noiseh, noisew)-1).*mag;
     imag = double(imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div)) - 128;
     imag = imrotate(imag, randi(360),'nearest','loose');
+   
     locx = randi(noisew - size(imag,2)+1); locy = randi(noiseh - size(imag,2)+1);
     noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) = noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) + imag;
     stimuli{1,i} = imresize(min(uint8(noise),255), [wh ww],'nearest');
@@ -68,7 +69,7 @@ DrawFormattedText(window, 'Remember these 3 tumors. You will respond with the nu
 Screen('DrawTextures',window,abc,[],rects);
 Screen('Flip', window);
 KbStrokeWait();
-
+corr = 0;
 for i = 1:trials+1
     cur = order(i);
     Screen('DrawTexture', window, tid(1,cur));
@@ -91,6 +92,9 @@ for i = 1:trials+1
     Screen('DrawTexture',window, noises(randi(noiseNum)));
     Screen('Flip',window);
     WaitSecs(0.3);
+    if (i > 10)
+        mag = mag*(1+(corr/(i-1)-0.8));
+    end   
 end
 
 Screen('CloseAll');
