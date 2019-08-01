@@ -31,6 +31,8 @@ for user=1:userNum
     correctList = userShapes == trueShapes;
     
     % Graph the Data
+    newFigure = figure;
+    
     histList = vertcat(shapeDiffList, correctList);
     histList = sortrows(histList', 1)';
     
