@@ -36,18 +36,18 @@ for user=1:userNum
     bins = [1:binNum];
     binLabels = zeros(binNum,2);
     histVals = zeros(binNum, 1);
-    stdVals = zeros(binNum, 1);
+    errVals = zeros(binNum, 1);
     for bin=1:binNum-1
         %Get mean accuracy
         histVals(bin) = mean(histList(2, 10*(bin-1)+1:10*bin));
         % Get Error
-        stdVals(bin) = std(histList(2, 10*(bin-1)+1:10*bin));
+        errVals(bin) = std(histList(2, 10*(bin-1)+1:10*bin))./sqrt(trials);
         % Get least and greatest value for bin
         binLabels(bin, :) = [histList(1, 10*(bin-1)+1), histList(1, 10*bin)];
     end
     % Get final bin (rounding)
     histVals(binNum) = mean(histList(2, 10*(binNum-1)+1:end));
-    stdVals(binNum) = std(histList(2, 10*(binNum-1)+1:end)); 
+    errVals(binNum) = std(histList(2, 10*(binNum-1)+1:end))./sqrt(trials); 
     binLabels(binNum, :) = [histList(1, 10*(binNum-1)+1), histList(1, end)];
         
     hold on
@@ -57,6 +57,8 @@ for user=1:userNum
 	xlabel('Differences between previous and current shape appearance, from least to greatest')
 	ylabel('Mean accuracy from 0 to 1')
     
+    set(gcf,'position',[50,50,6*trials,500])
+    
     somenames = num2str(bins.*10);
     xticks([1:1:binNum])
     visualBins = cell(binNum,1);
@@ -65,7 +67,7 @@ for user=1:userNum
     end
     xticklabels(visualBins);
 	%disp(histVals-stdVals);
-    er = errorbar(bins,histVals,-stdVals,stdVals);    
+    er = errorbar(bins,histVals,-errVals,errVals);    
     er.Color = [0 0 0];                            
     er.LineStyle = 'none';  
     
