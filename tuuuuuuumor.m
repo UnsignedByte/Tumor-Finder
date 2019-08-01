@@ -1,4 +1,3 @@
-global noises stimuli noisew noiseh ww wh
 Screen('Preference', 'SkipSyncTests', 1);
 rng('Shuffle');
 KbName('UnifyKeyNames');
@@ -48,7 +47,7 @@ for i = 1:stimuliNum
     Screen('Flip', window);
 end
 
-RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
+global noises stimuli noisew noiseh ww wh
 
 p = 0;
 pR = 0;
@@ -60,7 +59,10 @@ DrawFormattedText(window, 'Remember these 3 tumors. You will respond with the nu
 Screen('DrawTextures',window,abc,[],rects);
 Screen('Flip', window);
 KbStrokeWait();
-corr = 0;
+RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
+
+chunksize = 10;
+corrchunks = zeros(1,ceil(trials/chunksize));
 cursecs = now*24*60*60;
 for i = 1:trials+1
     cur = order(i);
@@ -75,7 +77,7 @@ for i = 1:trials+1
     % data
     uAns = find(keyCode,1) - KbName('1!') + 1;
     cAns = mod(round(3*cur/stimuliNum),3)+1;
-    corr = corr + (uAns == cAns);
+    corrchunks(1,floor(i/chunksize)) = corrchunks(1,floor(i/chunksize)) + (uAns == cAns);
     
     if i > 1
         responses(1,i-1) = uAns;
@@ -90,9 +92,8 @@ for i = 1:trials+1
 %     Screen('DrawTexture',window, noises(randi(noiseNum)));
     Screen('Flip',window);
     cursecs = now*24*60*60;
-    if mod(i,10)==0
-        mag = mag*(1+(corr/(10)-0.8));
-        corr = 0;
+    if mod(i,chunksize)==0
+        mag = mag*(1+(corrchunks(1,floor(i/chunksize))/10-0.8));
     end
 end
 
