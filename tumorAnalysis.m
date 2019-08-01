@@ -13,10 +13,10 @@ for user=1:userNum
     userName = userData(user).name;
     load(fullfile(filePath, userName, 'prevRelative.mat'));
     
-    shapeResponses = load(fullfile(filePath, userName, 'responses.mat'), 'responses');
+    shapeResponses = load(fullfile(filePath, userName, '/responses.mat'), 'responses');
     shapeResponses = cell2mat(struct2cell(shapeResponses));
     
-    shapeIndices = load(fullfile(filePath, userName, 'order.mat'), 'order');
+    shapeIndices = load(fullfile(filePath, userName, '/order.mat'), 'order');
     shapeIndices = cell2mat(struct2cell(shapeIndices));
     
     trials = size(shapeResponses, 2);
@@ -43,16 +43,16 @@ for user=1:userNum
     
     for bin=1:binNum-1
         %Get mean accuracy
-        histVals(bin) = mean(histList(2, (trials*(bin-1)/binNum)+1:trials*bin/binNum));
+        histVals(bin) = mean(histList(2, round(trials*(bin-1)/binNum)+1:round(trials*bin/binNum)));
         % Get Error
-        errVals(bin) = std(histList(2, (trials*(bin-1)/binNum)+1:trials*bin/binNum))./sqrt(trials);
+        errVals(bin) = std(histList(2, round(trials*(bin-1)/binNum)+1:round(trials*bin/binNum)))./sqrt(trials);
         % Get least and greatest value for bin
-        binLabels(bin, :) = [histList(1, (trials*(bin-1)/binNum)+1), histList(1, trials*bin/binNum)];
+        binLabels(bin, :) = [histList(1, round(trials*(bin-1)/binNum)+1), histList(1, round(trials*bin/binNum))];
     end
     % Get final bin (rounding)
-    histVals(binNum) = mean(histList(2, (trials*bin/binNum)+1:end));
-    errVals(binNum) = std(histList(2, (trials*bin/binNum)+1:end))./sqrt(trials); 
-    binLabels(binNum, :) = [histList(1, (trials*bin/binNum)), histList(1, end)];
+    histVals(binNum) = mean(histList(2, round(trials*bin/binNum)+1:end));
+    errVals(binNum) = std(histList(2, round(trials*bin/binNum)+1:end))./sqrt(trials); 
+    binLabels(binNum, :) = [histList(1, round(trials*bin/binNum)), histList(1, end)];
         
     hold on
     
@@ -80,10 +80,10 @@ for user=1:userNum
     % Plot difficulty over accuracy
     figureCell{user, 2} = figure;
     
-    corrchunks = load(fullfile(filePath, userName, 'corrchunks.mat'));
+    corrchunks = load(fullfile(filePath, userName, '/corrchunks.mat'));
     corrchunks = cell2mat(struct2cell(corrchunks));
     
-    corrmags = load(fullfile(filePath, userName, 'corrmags.mat'));
+    corrmags = load(fullfile(filePath, userName, '/corrmags.mat'));
     corrmags = cell2mat(struct2cell(corrmags));
     
     hold on
