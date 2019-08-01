@@ -107,7 +107,8 @@ cd(init);
 save('prev.mat', 'prev'); %3x3x3 matrix
 save('prevRelative.mat', 'prevRelative');
 save('order.mat', 'order');
-
+save('corrchunks.mat', 'corrchunks');
+save('corrmags.mat', 'corrmags');
 save('responses.mat', 'responses');
 cd ../..;
 
