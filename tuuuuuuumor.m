@@ -7,7 +7,7 @@ HideCursor();
 ww = rect(3); wh = rect(4);
 Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-trials = 749;
+trials = 299;
 stimuliNum = 147;
 
 order = randi(stimuliNum,1, trials+1);
@@ -62,9 +62,10 @@ KbStrokeWait();
 RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
 
 chunksize = 10;
-corrchunks = zeros(1,ceil((trials+1)/chunksize));
-corrmags = zeros(1, ceil((trials+1)/chunksize));
+corr = zeros(1,trials+1);
+mags = zeros(1, trials+1);
 cursecs = now*24*60*60;
+diffrate = 4;
 for i = 1:trials+1
     cur = order(i);
     Screen('DrawTexture', window, Screen('MakeTexture', window, makeTumor(i, mag, cur)));
@@ -78,7 +79,7 @@ for i = 1:trials+1
     % data
     uAns = find(keyCode,1) - KbName('1!') + 1;
     cAns = mod(round(3*cur/stimuliNum),3)+1;
-    corrchunks(1,ceil(i/chunksize)) = corrchunks(1,ceil(i/chunksize)) + (uAns == cAns);
+    corr(1,i) = corr(1,i) + (uAns == cAns);
     
     if i > 1
         responses(1,i-1) = uAns;
@@ -93,9 +94,11 @@ for i = 1:trials+1
 %     Screen('DrawTexture',window, noises(randi(noiseNum)));
     Screen('Flip',window);
     cursecs = now*24*60*60;
-    corrmags(1,ceil(i/chunksize)) = mag;
-    if mod(i,chunksize)==0
-        mag = mag*(1+((corrchunks(1,ceil(i/chunksize))/10-0.8)/2));
+    mags(1,i) = mag;
+    if uAns == cAns
+        mag = mag+diffrate;
+    else
+        mag = max(0,mag-diffrate);
     end
 end
 
