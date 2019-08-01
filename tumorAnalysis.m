@@ -85,7 +85,7 @@ for user=1:userNum
         p1s(i) = sum(prevRelative(:,i,:),'all')/trials;
         p2s(i) = sum(prevRelative(:,i,i))/ns(i);
     end
-    ses = ((p1s.*(1-p1s)./ns)+(p2s.*(1-p2s)./trials)).^0.5;
+    ses = ((p2s.*(1-p2s)./ns)+(p1s.*(1-p1s)./trials)).^0.5;
     zs = (p2s-p1s)./ses;
     cdfs = normcdf(zs);
     Pvals = 1-cdfs;
