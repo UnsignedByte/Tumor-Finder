@@ -1,12 +1,9 @@
-clear all
-close all
-
 %% Get User Files
 filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
 userNum = length(userData);
 
-figureCell = cell(userNum, 1);
+figureCell = cell(userNum, 2);
 
 % Go through each User
 
@@ -19,7 +16,7 @@ for user=1:userNum
     shapeResponses = load(fullfile(filePath, userName, '/responses.mat'), 'responses');
     shapeResponses = cell2mat(struct2cell(shapeResponses));
     
-    shapeIndices = load(fullfile([filePath, userName, '/order.mat']), 'order');
+    shapeIndices = load(fullfile(filePath, userName, '/order.mat'), 'order');
     shapeIndices = cell2mat(struct2cell(shapeIndices));
     
     trials = size(shapeResponses, 2);
@@ -33,7 +30,7 @@ for user=1:userNum
     correctList = userShapes == trueShapes;
     
     % Graph the Data
-    figureCell{user} = figure;
+    figureCell{user, 1} = figure;
     
     histList = vertcat(shapeDiffList, correctList);
     histList = sortrows(histList', 1)';
@@ -79,6 +76,20 @@ for user=1:userNum
     er = errorbar(bins,histVals,-errVals,errVals);    
     er.Color = [0 0 0];                            
     er.LineStyle = 'none';  
+    
+    % Plot difficulty over accuracy
+    figureCell{user, 2} = figure;
+    
+    corrchunks = load(fullfile(filePath, userName, '/corrchunks.mat'));
+    corrchunks = cell2mat(struct2cell(corrchunks));
+    
+    corrmags = load(fullfile(filePath, userName, '/corrmags.mat'));
+    corrmags = cell2mat(struct2cell(corrmags));
+    
+    hold on
+    
+    title('Over all the trials, the user accuracy versus the difficulty setting')
+    area(corrmags, corrchunks);
     
     %% GET Z-Scores
     p1s = zeros(1,3); 
