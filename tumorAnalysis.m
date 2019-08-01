@@ -77,16 +77,16 @@ for user=1:userNum
     er.LineStyle = 'none';  
     
     %% GET Z-Scores
-    p0s = zeros(1,3); 
-    phats = zeros(1,3);
+    p1s = zeros(1,3); 
+    p2s = zeros(1,3);
     ns = zeros(1,3);
     for i = 1:3
         ns(i) = sum(prevRelative(:,:,i),'all');
-        p0s(i) = sum(prevRelative(:,i,:),'all')/trials;
-        phats(i) = sum(prevRelative(:,i,i))/ns(i);
+        p1s(i) = sum(prevRelative(:,i,:),'all')/trials;
+        p2s(i) = sum(prevRelative(:,i,i))/ns(i);
     end
-    sds = (p0s.*(1-p0s)./ns).^0.5;
-    zs = (phats-p0s)./sds;
+    ses = ((p1s.*(1-p1s)./ns)+(p2s.*(1-p2s)./trials)).^0.5;
+    zs = (p2s-p1s)./ses;
     cdfs = normcdf(zs);
     Pvals = 1-cdfs;
     save(fullfile(filePath, userName, 'pvals.mat'), 'Pvals');
