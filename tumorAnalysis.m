@@ -61,7 +61,7 @@ for user=1:userNum
 	ylabel('Mean accuracy from 0 to 1')
     
     screenLimit = 2880; 
-    set(gcf,'position',[50,50,min(6*trials, screenLimit),500])
+    set(gcf,'position',[50,50,min(75*binNum, screenLimit),500])
     
     somenames = num2str(bins.*10);
     xticks([1:1:binNum])
