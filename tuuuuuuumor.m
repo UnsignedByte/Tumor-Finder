@@ -91,7 +91,8 @@ for i = 1:trials+1
     Screen('Flip',window);
     cursecs = now*24*60*60;
     if mod(i,10)==0
-        mag = mag*(1+(corr/(i-1)-0.8));
+        mag = mag*(1+(corr/(10)-0.8));
+        corr = 0;
     end
 end
 
