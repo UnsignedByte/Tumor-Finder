@@ -21,7 +21,7 @@ for user=1:userNum
     shapeIndices = cell2mat(struct2cell(shapeIndices));
     
     trials = size(shapeResponses, 2);
-    binNum = ceil(trials/10);
+    binNum = 10;
     
     userShapes = shapeResponses(1,:);
     trueShapes = shapeResponses(2,:);
@@ -42,16 +42,16 @@ for user=1:userNum
     
     for bin=1:binNum-1
         %Get mean accuracy
-        histVals(bin) = mean(histList(2, 10*(bin-1)+1:10*bin));
+        histVals(bin) = mean(histList(2, (trials*(bin-1)/binNum)+1:trials*bin/binNum));
         % Get Error
-        errVals(bin) = std(histList(2, 10*(bin-1)+1:10*bin))./sqrt(trials);
+        errVals(bin) = std(histList(2, (trials*(bin-1)/binNum)+1:trials*bin/binNum))./sqrt(trials);
         % Get least and greatest value for bin
-        binLabels(bin, :) = [histList(1, 10*(bin-1)+1), histList(1, 10*bin)];
+        binLabels(bin, :) = [histList(1, (trials*(bin-1)/binNum)+1), histList(1, trials*bin/binNum)];
     end
     % Get final bin (rounding)
-    histVals(binNum) = mean(histList(2, 10*(binNum-1)+1:end));
-    errVals(binNum) = std(histList(2, 10*(binNum-1)+1:end))./sqrt(trials); 
-    binLabels(binNum, :) = [histList(1, 10*(binNum-1)+1), histList(1, end)];
+    histVals(binNum) = mean(histList(2, (trials*bin/binNum)+1:end));
+    errVals(binNum) = std(histList(2, (trials*bin/binNum)+1:end))./sqrt(trials); 
+    binLabels(binNum, :) = [histList(1, (trials*bin/binNum)), histList(1, end)];
         
     hold on
     
@@ -85,7 +85,7 @@ for user=1:userNum
         p1s(i) = sum(prevRelative(:,i,:),'all')/trials;
         p2s(i) = sum(prevRelative(:,i,i))/ns(i);
     end
-    ses = ((p2s.*(1-p2s)./ns)+(p1s.*(1-p1s)./trials)).^0.5;
+    ses = ((p1s.*(1-p1s)./ns)+(p2s.*(1-p2s)./trials)).^0.5;
     zs = (p2s-p1s)./ses;
     cdfs = normcdf(zs);
     Pvals = 1-cdfs;
