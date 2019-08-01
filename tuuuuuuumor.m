@@ -35,11 +35,10 @@ mag = 128;
 noiseh = round(wh/div);
 noisew = round(ar * noiseh);
 
-noiseNum = 25;
-noises = zeros(noiseh, noisew, noiseNum);
-for i = 1:noiseNum
+noises = zeros(noiseh, noisew, trials);
+for i = 1:trials
     noises(:,:,i) = (2.*rand(noiseh, noisew)-1);
-    DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/noiseNum*100)) '%'], 'center', 'center');
+    DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/trials*100)) '%'], 'center', 'center');
     Screen('Flip', window);
 end
 
@@ -91,7 +90,7 @@ for i = 1:trials+1
 %     Screen('DrawTexture',window, noises(randi(noiseNum)));
     Screen('Flip',window);
     cursecs = now*24*60*60;
-    if (i > 10)
+    if mod(i,10)==0
         mag = mag*(1+(corr/(i-1)-0.8));
     end
 end
