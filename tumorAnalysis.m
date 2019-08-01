@@ -82,21 +82,21 @@ for user=1:userNum
     % Plot difficulty over accuracy
     figureCell{user, 2} = figure;
     
-    corrchunks = load(fullfile(filePath, userName, '/corrchunks.mat'));
-    corrchunks = cell2mat(struct2cell(corrchunks));
+    corr = load(fullfile(filePath, userName, '/corr.mat'));
+    corr = cell2mat(struct2cell(corr));
     
-    corrmags = load(fullfile(filePath, userName, '/corrmags.mat'));
-    corrmags = cell2mat(struct2cell(corrmags));
+    mags = load(fullfile(filePath, userName, '/mags.mat'));
+    mags = cell2mat(struct2cell(mags));
     
     hold on
     
     title('Over all the trials, the user accuracy versus the difficulty setting')
     
-    %yyaxis left
-    plot([1:length(corrmags)], corrmags);
+    yyaxis left
+    plot([1:length(mags)], mags);
     
-    %yyaxis right
-    %plot([1:length(corrchunks)], corrchunks);
+    yyaxis right
+    plot([1:length(corr)], corr);
     
     %% GET Z-Scores
     p1s = zeros(1,3); 
