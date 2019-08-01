@@ -7,7 +7,7 @@ HideCursor();
 ww = rect(3); wh = rect(4);
 Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-trials = 749;
+trials = 299;
 stimuliNum = 147;
 
 order = randi(stimuliNum,1, trials+1);
@@ -69,8 +69,8 @@ for i = 1:trials+1
     cur = order(i);
     Screen('DrawTexture', window, Screen('MakeTexture', window, makeTumor(i, mag, cur)));
     cursecs = now*24*60*60-cursecs;
-    if cursecs < 0.1
-        WaitSecs(0.1-cursecs);
+    if cursecs < 0.05
+        WaitSecs(0.05-cursecs);
     end
     Screen('Flip', window);
     [~, keyCode] = KbStrokeWait();
