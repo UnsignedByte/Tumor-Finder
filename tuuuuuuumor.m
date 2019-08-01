@@ -7,7 +7,7 @@ HideCursor();
 ww = rect(3); wh = rect(4);
 Screen('BlendFunction', window,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-trials = 250;
+trials = 749;
 stimuliNum = 147;
 
 order = randi(stimuliNum,1, trials+1);
