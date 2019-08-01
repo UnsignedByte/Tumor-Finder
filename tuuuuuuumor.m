@@ -35,7 +35,7 @@ noiseh = round(wh/div);
 noisew = round(ar * noiseh);
 
 noises = zeros(noiseh, noisew, trials);
-for i = 1:trials
+for i = 1:trials+1
     noises(:,:,i) = (2.*rand(noiseh, noisew)-1);
     DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/trials*100)) '%'], 'center', 'center');
     Screen('Flip', window);
