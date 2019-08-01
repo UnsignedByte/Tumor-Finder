@@ -1,3 +1,4 @@
+global noises stimuli noisew noiseh ww wh
 Screen('Preference', 'SkipSyncTests', 1);
 rng('Shuffle');
 KbName('UnifyKeyNames');
@@ -18,8 +19,6 @@ prevRelative = zeros(3,3,3);
 
 %1 = 0, 2 = 147/3, 3 = 2*147/3
 
-tid = zeros(1,stimuliNum);
-
 file = 'Stimuli';
 siz = [400 400];
 sizz = siz(1)/2;
@@ -36,24 +35,18 @@ mag = 128;
 noiseh = round(wh/div);
 noisew = round(ar * noiseh);
 
-noiseNum = 10;
-noises = zeros(stimuliNum,1);
+noiseNum = 25;
+noises = zeros(noiseh, noisew, noiseNum);
 for i = 1:noiseNum
-    noises(i) = Screen('MakeTexture', window, resizem(round(rand(noiseh, noisew))*255,[wh,ww]));
+    noises(:,:,i) = (2.*rand(noiseh, noisew)-1);
+    DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/noiseNum*100)) '%'], 'center', 'center');
+    Screen('Flip', window);
 end
 
 for i = 1:stimuliNum
-    rotnum = randi(3);
-    DrawFormattedText(window, ['Generating Noise: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
+    stimuli{i} = double(imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div)) - 128;
+    DrawFormattedText(window, ['Loading Stimuli: ' num2str(round(i/stimuliNum*100)) '%'], 'center', 'center');
     Screen('Flip', window);
-    noise = 128+(2.*rand(noiseh, noisew)-1).*mag;
-    imag = double(imresize(rgb2gray(imread(fullfile(file, ['Morph' num2str(i) '.jpg']))),siz./div)) - 128;
-    imag = imrotate(imag, randi(360),'nearest','loose');
-   
-    locx = randi(noisew - size(imag,2)+1); locy = randi(noiseh - size(imag,2)+1);
-    noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) = noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) + imag;
-    stimuli{1,i} = imresize(min(uint8(noise),255), [wh ww],'nearest');
-    tid(1,i) = Screen('MakeTexture', window, stimuli{1,i});
 end
 
 RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
@@ -69,10 +62,15 @@ Screen('DrawTextures',window,abc,[],rects);
 Screen('Flip', window);
 KbStrokeWait();
 corr = 0;
+cursecs = now*24*60*60;
 for i = 1:trials+1
     cur = order(i);
-    Screen('DrawTexture', window, tid(1,cur));
-    Screen('Flip', window, 0.1);
+    Screen('DrawTexture', window, Screen('MakeTexture', window, makeTumor(i, mag, cur)));
+    cursecs = now*24*60*60-cursecs;
+    if cursecs < 0.3
+        WaitSecs(0.3-cursecs);
+    end
+    Screen('Flip', window);
     [~, keyCode] = KbStrokeWait();
     % Note: The file Responses now holds the values of both the user % comp
     % data
@@ -90,12 +88,12 @@ for i = 1:trials+1
     end
     p = cAns;
     pR = uAns;
-    Screen('DrawTexture',window, noises(randi(noiseNum)));
+%     Screen('DrawTexture',window, noises(randi(noiseNum)));
     Screen('Flip',window);
-    WaitSecs(0.3);
+    cursecs = now*24*60*60;
     if (i > 10)
         mag = mag*(1+(corr/(i-1)-0.8));
-    end   
+    end
 end
 
 Screen('CloseAll');
@@ -109,3 +107,14 @@ save('order.mat', 'order');
 
 save('responses.mat', 'responses');
 cd ../..;
+
+function textid = makeTumor(i, mag, tumorId)
+    global noises stimuli noisew noiseh ww wh
+    noise = 128+squeeze(noises(:,:,i)).*mag;
+    
+    imag = imrotate(stimuli{tumorId}, randi(360),'nearest','loose');
+   
+    locx = randi(noisew - size(imag,2)+1); locy = randi(noiseh - size(imag,2)+1);
+    noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) = noise(locy:locy+size(imag,1)-1,locx:locx+size(imag,2)-1) + imag;
+    textid = imresize(min(uint8(noise),255), [wh ww],'nearest');
+end
