@@ -70,8 +70,8 @@ for i = 1:trials+1
     cur = order(i);
     Screen('DrawTexture', window, Screen('MakeTexture', window, makeTumor(i, mag, cur)));
     cursecs = now*24*60*60-cursecs;
-    if cursecs < 0.1
-        WaitSecs(0.1-cursecs);
+    if cursecs < 0.05
+        WaitSecs(0.05-cursecs);
     end
     Screen('Flip', window);
     [~, keyCode] = KbStrokeWait();
