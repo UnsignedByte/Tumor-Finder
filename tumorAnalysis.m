@@ -6,6 +6,8 @@ filePath = [cd, '/Tumor Results/'];
 userData = dir([filePath '/user_*']);
 userNum = length(userData);
 
+figureCell = cell(userNum, 1);
+
 % Go through each User
 
 for user=1:userNum
@@ -31,7 +33,7 @@ for user=1:userNum
     correctList = userShapes == trueShapes;
     
     % Graph the Data
-    newFigure = figure;
+    figureCell{user} = figure;
     
     histList = vertcat(shapeDiffList, correctList);
     histList = sortrows(histList', 1)';
