@@ -20,7 +20,7 @@ for user=1:userNum
     
         
     trials = size(shapeResponses, 2);
-    binNum = ceil(trials/10);
+    binNum = floor(trials/10);
     
     shapeIndices = load(fullfile([filePath, userName, '/order.mat']), 'order');
     shapeIndices = cell2mat(struct2cell(shapeIndices));
