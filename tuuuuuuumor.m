@@ -1,4 +1,3 @@
-global noises stimuli noisew noiseh ww wh
 Screen('Preference', 'SkipSyncTests', 1);
 rng('Shuffle');
 KbName('UnifyKeyNames');
@@ -48,7 +47,7 @@ for i = 1:stimuliNum
     Screen('Flip', window);
 end
 
-RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
+global noises stimuli noisew noiseh ww wh
 
 p = 0;
 pR = 0;
@@ -60,6 +59,7 @@ DrawFormattedText(window, 'Remember these 3 tumors. You will respond with the nu
 Screen('DrawTextures',window,abc,[],rects);
 Screen('Flip', window);
 KbStrokeWait();
+RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
 corr = 0;
 cursecs = now*24*60*60;
 for i = 1:trials+1
