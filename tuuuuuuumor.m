@@ -62,8 +62,8 @@ KbStrokeWait();
 RestrictKeysForKbCheck([KbName('1!'), KbName('2@'), KbName('3#')]); %Restrict to 1,2,3
 
 chunksize = 10;
-corrchunks = zeros(1,ceil(trials/chunksize));
-corrmags = zeros(1, ceil(trials/chunksize));
+corrchunks = zeros(1,ceil((trials+1)/chunksize));
+corrmags = zeros(1, ceil((trials+1)/chunksize));
 cursecs = now*24*60*60;
 for i = 1:trials+1
     cur = order(i);
