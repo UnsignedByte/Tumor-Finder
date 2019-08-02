@@ -66,6 +66,7 @@ corr = zeros(1,trials+1);
 mags = zeros(1, trials+1);
 cursecs = now*24*60*60;
 diffrate = 4;
+dcr = 0.8; %desired rate correct
 for i = 1:trials+1
     cur = order(i);
     Screen('DrawTexture', window, Screen('MakeTexture', window, makeTumor(i, mag, cur)));
@@ -98,7 +99,7 @@ for i = 1:trials+1
     if uAns == cAns
         mag = mag+diffrate;
     else
-        mag = max(0,mag-diffrate);
+        mag = max(0,mag-diffrate*dcr/(1-dcr));
     end
 end
 
